@@ -23,7 +23,7 @@ const projects = [
       "PDF Generation",
     ],
     caseStudy: "/learnforge-ai",
-    github: "https://github.com/pavanalakunta58/learnforge-ai",
+    github: "https://github.com/Pavan09-Is-Here/learnforge-ai",
   },
   {
     icon: Sparkles,

@@ -12,8 +12,8 @@ const contactLinks = [
   {
     icon: FaGithub,
     title: "GitHub",
-    value: "github.com/pavanalakunta05",
-    href: "https://github.com/pavanalakunta05",
+    value: "github.com/Pavan09-Is-Here",
+    href: "https://github.com/Pavan09-Is-Here",
   },
   {
   icon: FaLinkedinIn,

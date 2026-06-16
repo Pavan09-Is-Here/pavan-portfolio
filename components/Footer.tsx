@@ -16,7 +16,7 @@ export default function Footer() {
 
         <div className="flex items-center gap-3">
           <a
-            href="https://github.com/pavanalakunta05"
+            href="https://github.com/Pavan09-Is-Here"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"

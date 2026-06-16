@@ -37,7 +37,7 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-3 md:flex">
           <a
-            href="https://github.com/pavanalakunta58"
+            href="https://github.com/Pavan09-Is-Here"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
@@ -89,7 +89,7 @@ export default function Navbar() {
 
             <div className="mt-3 flex gap-3">
               <a
-                href="https://github.com/pavanalakunta05"
+                href="https://github.com/Pavan09-Is-Here"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold text-white"

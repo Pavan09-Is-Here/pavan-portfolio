@@ -81,7 +81,7 @@ export default function Hero() {
             </a>
 
             <a
-  href="https://github.com/pavanalakunta05"
+  href="https://github.com/Pavan09-Is-Here"
   target="_blank"
   rel="noopener noreferrer"
   className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 font-bold text-white backdrop-blur transition hover:bg-white/10"

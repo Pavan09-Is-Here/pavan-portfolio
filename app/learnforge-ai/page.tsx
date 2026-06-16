@@ -112,7 +112,7 @@ export default function LearnForgePage() {
 
             <div className="mt-8 flex flex-wrap gap-4">
               <a
-                href="https://github.com/pavanalakunta58/learnforge-ai"
+                href="https://github.com/Pavan09-Is-Here/learnforge-ai"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-bold text-slate-950 transition hover:bg-blue-100"
