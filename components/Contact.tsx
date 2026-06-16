@@ -16,11 +16,11 @@ const contactLinks = [
     href: "https://github.com/Pavan09-Is-Here",
   },
   {
-  icon: FaLinkedinIn,
-  title: "LinkedIn",
-  value: "linkedin.com/in/pavan-alakunta",
-  href: "https://www.linkedin.com/in/pavan-alakunta/",
-},
+    icon: FaLinkedinIn,
+    title: "LinkedIn",
+    value: "linkedin.com/in/pavan-alakunta",
+    href: "https://www.linkedin.com/in/pavan-alakunta",
+  },
   {
     icon: MapPin,
     title: "Location",
@@ -60,14 +60,14 @@ export default function Contact() {
           <div className="mt-8 flex flex-wrap gap-4">
             <a
               href="mailto:pavanalakunta58@gmail.com"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-bold text-slate-950 transition hover:bg-blue-100"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-violet-500 px-6 py-3 font-bold text-white shadow-lg shadow-blue-500/20 transition hover:scale-105 hover:shadow-blue-500/30"
             >
               <Mail size={18} />
               Email Me
             </a>
 
             <a
-              href="/resume.pdf"
+              href="/Pavan_Alakunta_CV.pdf"
               className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-6 py-3 font-bold text-white transition hover:bg-white/15"
             >
               <Download size={18} />

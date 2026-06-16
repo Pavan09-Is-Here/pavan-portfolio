@@ -47,10 +47,10 @@ export default function Navbar() {
           </a>
 
           <a
-  href="https://www.linkedin.com/in/pavan-alakunta"
-  target="_blank"
-  rel="noopener noreferrer"
-  aria-label="LinkedIn"
+            href="https://www.linkedin.com/in/pavan-alakunta"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
             className="rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
           >
             <FaLinkedinIn size={18} />
@@ -58,7 +58,7 @@ export default function Navbar() {
 
           <a
             href="/#contact"
-            className="rounded-full bg-white px-5 py-2 text-sm font-bold text-slate-950 transition hover:bg-blue-100"
+            className="rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-violet-500 px-5 py-2 text-sm font-bold text-white shadow-lg shadow-blue-500/20 transition hover:scale-105 hover:shadow-blue-500/30"
           >
             Contact
           </a>
@@ -101,7 +101,7 @@ export default function Navbar() {
               <a
                 href="/#contact"
                 onClick={() => setOpen(false)}
-                className="inline-flex flex-1 items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-bold text-slate-950"
+                className="inline-flex flex-1 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-violet-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/20"
               >
                 Contact
               </a>

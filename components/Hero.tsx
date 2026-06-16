@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "motion/react";
 import {
   ArrowRight,
@@ -62,8 +63,8 @@ export default function Hero() {
 
           <div className="mt-9 flex flex-wrap gap-4">
             <a
-              href="#projects"
-              className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-bold text-slate-950 transition hover:bg-blue-100"
+              href="/projects"
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-violet-500 px-6 py-3 font-bold text-white shadow-lg shadow-blue-500/20 transition hover:scale-105 hover:shadow-blue-500/30"
             >
               View Projects
               <ArrowRight
@@ -73,7 +74,7 @@ export default function Hero() {
             </a>
 
             <a
-              href="/resume.pdf"
+              href="/Pavan_Alakunta_CV.pdf"
               className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-6 py-3 font-bold text-white backdrop-blur transition hover:bg-white/15"
             >
               <Download size={18} />
@@ -81,14 +82,14 @@ export default function Hero() {
             </a>
 
             <a
-  href="https://github.com/Pavan09-Is-Here"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 font-bold text-white backdrop-blur transition hover:bg-white/10"
->
-  <FaGithub size={18} />
-  GitHub
-</a>
+              href="https://github.com/Pavan09-Is-Here"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 font-bold text-white backdrop-blur transition hover:bg-white/10"
+            >
+              <FaGithub size={18} />
+              GitHub
+            </a>
           </div>
         </motion.div>
 
@@ -100,61 +101,33 @@ export default function Hero() {
         >
           <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-r from-blue-500/20 to-violet-500/20 blur-2xl" />
 
-          <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 shadow-2xl backdrop-blur-xl">
-            <div className="mb-6 flex items-center gap-2">
-              <div className="h-3 w-3 rounded-full bg-red-400" />
-              <div className="h-3 w-3 rounded-full bg-yellow-400" />
-              <div className="h-3 w-3 rounded-full bg-green-400" />
+          <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 text-center shadow-2xl backdrop-blur-xl">
+            <div className="mx-auto h-72 w-72 overflow-hidden rounded-full border border-white/10 bg-white/10 shadow-2xl shadow-blue-500/20 md:h-80 md:w-80">
+              <Image
+                src="/profile.png"
+                alt="Pavan Alakunta professional portrait"
+                width={700}
+                height={700}
+                className="h-full w-full object-cover"
+                priority
+              />
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-black/40 p-6 font-mono text-sm">
-              <p className="text-slate-500">// pavan.ai/profile</p>
+            <div className="mt-7">
+              <h2 className="text-3xl font-black tracking-tight text-white">
+                Pavan Alakunta
+              </h2>
 
-              <p className="mt-4 text-blue-300">const engineer = &#123;</p>
-
-              <p className="pl-4 text-slate-300">
-                name:{" "}
-                <span className="text-cyan-300">
-                  &quot;Pavan Alakunta&quot;
-                </span>
-                ,
+              <p className="mt-2 bg-gradient-to-r from-blue-400 via-cyan-300 to-violet-400 bg-clip-text text-lg font-bold text-transparent">
+                AI & ML Engineer
               </p>
 
-              <p className="pl-4 text-slate-300">
-                role:{" "}
-                <span className="text-cyan-300">
-                  &quot;AI & ML Engineer&quot;
-                </span>
-                ,
+              <p className="mt-3 text-sm font-medium text-slate-400">
+                Machine Learning • LLM/RAG Systems • AI Full Stack Products
               </p>
-
-              <p className="pl-4 text-slate-300">
-                focus:{" "}
-                <span className="text-cyan-300">
-                  &quot;ML, LLMs, RAG&quot;
-                </span>
-                ,
-              </p>
-
-              <p className="pl-4 text-slate-300">
-                product:{" "}
-                <span className="text-cyan-300">
-                  &quot;LearnForge AI&quot;
-                </span>
-                ,
-              </p>
-
-              <p className="pl-4 text-slate-300">
-                mission:{" "}
-                <span className="text-cyan-300">
-                  &quot;AI for real learning&quot;
-                </span>
-              </p>
-
-              <p className="text-blue-300">&#125;;</p>
             </div>
 
-            <div className="mt-5 grid grid-cols-3 gap-3">
+            <div className="mt-6 grid grid-cols-3 gap-3">
               {stats.map((stat) => (
                 <div
                   key={stat.label}
@@ -163,6 +136,7 @@ export default function Hero() {
                   <div className="text-xl font-black text-white">
                     {stat.value}
                   </div>
+
                   <div className="mt-1 text-xs text-slate-400">
                     {stat.label}
                   </div>
@@ -171,7 +145,7 @@ export default function Hero() {
             </div>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl border border-white/10 bg-blue-400/10 p-4">
+              <div className="rounded-2xl border border-white/10 bg-blue-400/10 p-4 text-left">
                 <Brain className="text-blue-300" size={24} />
 
                 <p className="mt-3 text-sm font-bold text-white">
@@ -183,7 +157,7 @@ export default function Hero() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-violet-400/10 p-4">
+              <div className="rounded-2xl border border-white/10 bg-violet-400/10 p-4 text-left">
                 <Code2 className="text-violet-300" size={24} />
 
                 <p className="mt-3 text-sm font-bold text-white">
