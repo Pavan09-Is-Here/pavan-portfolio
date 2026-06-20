@@ -112,14 +112,14 @@ export default function LearnForgePage() {
 
             <div className="mt-8 flex flex-wrap gap-4">
               <a
-                href="https://github.com/Pavan09-Is-Here/learnforge-ai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-bold text-slate-950 transition hover:bg-blue-100"
-              >
-                <FaGithub size={18} />
-                GitHub Repo
-              </a>
+  href="https://github.com/Pavan09-Is-Here/learnforge-ai"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-violet-500 px-6 py-3 font-bold text-white shadow-lg shadow-blue-500/20 transition duration-300 hover:scale-105 hover:shadow-blue-500/30"
+>
+  <FaGithub size={18} />
+  GitHub Repo
+</a>
 
               <a
                 href="/Pavan_Alakunta_CV.pdf"
