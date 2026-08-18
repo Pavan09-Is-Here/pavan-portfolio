@@ -20,7 +20,7 @@ const highlights = [
 const stats = [
   { value: "AI/ML", label: "Primary Focus" },
   { value: "RAG", label: "Core Skill" },
-  { value: "35+", label: "Team Led" },
+  { value: "35+", label: "AI Engineer" },
 ];
 
 export default function Hero() {
