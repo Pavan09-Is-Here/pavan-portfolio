@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Pavan Alakunta CV</title>
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Georgia", "Times New Roman", serif;
+    color: #1f2430;
+    font-size: 8.8pt;
+    line-height: 1.32;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    display: grid;
+    grid-template-columns: 64mm 1fr;
+    width: 210mm;
+    min-height: 297mm;
+  }
+
+  /* ---- Sidebar ---- */
+  .sidebar {
+    background: #12213f;
+    color: #e8edf7;
+    padding: 10mm 7mm 8mm 9mm;
+  }
+  .sidebar h1 {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 16pt;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    margin: 0 0 1mm 0;
+    line-height: 1.12;
+    color: #ffffff;
+  }
+  .sidebar .role {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 8.8pt;
+    font-weight: 600;
+    color: #7dc4ff;
+    letter-spacing: 0.4px;
+    margin-bottom: 5.5mm;
+  }
+  .side-block { margin-bottom: 4.8mm; }
+  .side-block h2 {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.8pt;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #7dc4ff;
+    margin: 0 0 2.2mm 0;
+    padding-bottom: 1.2mm;
+    border-bottom: 0.5pt solid rgba(255,255,255,0.25);
+  }
+  .contact-item {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.6pt;
+    margin-bottom: 1.8mm;
+    word-break: break-word;
+    color: #dfe6f5;
+  }
+  .contact-item .lbl {
+    display: block;
+    font-size: 6.6pt;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #8fa5cf;
+    margin-bottom: 0.3mm;
+  }
+  .pill-list { display: flex; flex-wrap: wrap; gap: 1.6mm; }
+  .pill {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.6pt;
+    background: rgba(125, 196, 255, 0.14);
+    border: 0.5pt solid rgba(125, 196, 255, 0.4);
+    color: #cfe6ff;
+    padding: 1.1mm 2.3mm;
+    border-radius: 3mm;
+  }
+  .skill-group { margin-bottom: 2.3mm; }
+  .skill-group .name {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.4pt;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 1mm;
+  }
+  .skill-group .items {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.4pt;
+    color: #c3cfe6;
+    line-height: 1.42;
+  }
+  .lang-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.6pt;
+    color: #dfe6f5;
+    margin-bottom: 1.2mm;
+  }
+  .lang-row span:last-child { color: #8fa5cf; }
+
+  /* ---- Main ---- */
+  .main { padding: 10mm 10mm 8mm 9mm; }
+  .section { margin-bottom: 3.6mm; }
+  .section h2 {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.8pt;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: #12213f;
+    margin: 0 0 1.8mm 0;
+    padding-bottom: 1mm;
+    border-bottom: 1pt solid #12213f;
+  }
+  .summary { font-size: 8.8pt; color: #333a48; text-align: justify; }
+
+  .entry { margin-bottom: 2.4mm; }
+  .entry:last-child { margin-bottom: 0; }
+  .entry-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 3mm;
+  }
+  .entry-title {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 9.1pt;
+    color: #12213f;
+  }
+  .entry-date {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.8pt;
+    color: #6b7386;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .entry-org {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 8pt;
+    font-style: italic;
+    color: #4a5573;
+    margin-bottom: 0.9mm;
+  }
+  ul.bullets {
+    margin: 0;
+    padding-left: 3.4mm;
+  }
+  ul.bullets li {
+    margin-bottom: 0.5mm;
+    padding-left: 0.6mm;
+  }
+  ul.bullets li::marker { color: #2e6fbf; }
+
+  .two-col-projects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 6mm;
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <h1>PAVAN<br/>ALAKUNTA</h1>
+      <div class="role">AI ENGINEER</div>
+
+      <div class="side-block">
+        <h2>Contact</h2>
+        <div class="contact-item"><span class="lbl">Email</span>pavanalakunta58@gmail.com</div>
+        <div class="contact-item"><span class="lbl">Phone</span>+44 7721 318451</div>
+        <div class="contact-item"><span class="lbl">Location</span>Hatfield, UK</div>
+        <div class="contact-item"><span class="lbl">LinkedIn</span>linkedin.com/in/pavan-alakunta</div>
+        <div class="contact-item"><span class="lbl">GitHub</span>github.com/Pavan09-Is-Here</div>
+      </div>
+
+      <div class="side-block">
+        <h2>Core Skills</h2>
+        <div class="skill-group">
+          <div class="name">Languages</div>
+          <div class="items">Python, TypeScript, SQL, C, R, MATLAB, JavaScript</div>
+        </div>
+        <div class="skill-group">
+          <div class="name">ML &amp; AI</div>
+          <div class="items">PyTorch, TensorFlow, Keras, Scikit-learn, Hugging Face, RAG Pipelines, Prompt Engineering</div>
+        </div>
+        <div class="skill-group">
+          <div class="name">Computer Vision / NLP</div>
+          <div class="items">OpenCV, YOLOv8, BERT, GPT fine-tuning, NLTK, Sentence Transformers</div>
+        </div>
+        <div class="skill-group">
+          <div class="name">AI Product Engineering</div>
+          <div class="items">FastAPI, SQLAlchemy, Next.js, React, Supabase, PostgreSQL, OpenAI API</div>
+        </div>
+        <div class="skill-group">
+          <div class="name">Tools</div>
+          <div class="items">Git, Linux, Jupyter, VS Code, PyCharm</div>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <h2>Education</h2>
+        <div class="skill-group">
+          <div class="name">MSc AI &amp; Robotics</div>
+          <div class="items">University of Hertfordshire<br/>Jan 2026 – Present</div>
+        </div>
+        <div class="skill-group">
+          <div class="name">B.Tech AI &amp; ML</div>
+          <div class="items">Nalla Malla Reddy Engineering College<br/>First Class Honours · GPA 7.68/10<br/>Oct 2021 – May 2025</div>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <h2>Languages</h2>
+        <div class="lang-row"><span>English</span><span>Fluent</span></div>
+        <div class="lang-row"><span>Telugu</span><span>Native</span></div>
+        <div class="lang-row"><span>Hindi</span><span>Proficient</span></div>
+      </div>
+
+      <div class="side-block">
+        <h2>Right to Work</h2>
+        <div class="items" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:8pt;color:#dfe6f5;line-height:1.5;">
+          UK Student Visa holder — eligible for the Graduate Route Visa, providing 2 years of post-study work authorisation.
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="section">
+        <h2>Profile</h2>
+        <p class="summary">
+          AI and Machine Learning graduate with hands-on, all-round experience across the AI stack — from
+          training data quality and model evaluation to backend APIs, databases, and modern frontend
+          interfaces. Comfortable working on computer vision, NLP, and LLM/RAG systems, and shipping
+          full-stack AI products end to end. Strong mathematical foundations in linear algebra, probability,
+          and optimisation. Seeking an AI Engineer role delivering scalable, high-impact AI solutions within
+          a UK technology organisation.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Work Experience</h2>
+
+        <div class="entry">
+          <div class="entry-top">
+            <div class="entry-title">AI Engineer</div>
+            <div class="entry-date">2025</div>
+          </div>
+          <div class="entry-org">Centific — Hyderabad, India</div>
+          <ul class="bullets">
+            <li>Worked on NLP, AI training, and generative AI data quality tasks across LLM datasets.</li>
+            <li>Reviewed dataset quality, task consistency, and output accuracy across annotation pipelines.</li>
+            <li>Designed and applied prompt engineering strategies that improved model response quality to above 98% accuracy.</li>
+            <li>Evaluated and refined AI model responses, supporting RLHF workflows used to fine-tune LLMs.</li>
+          </ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-top">
+            <div class="entry-title">Freelance AI Trainer &amp; Subject Matter Expert</div>
+            <div class="entry-date">2023 – 2024</div>
+          </div>
+          <div class="entry-org">Chegg / Outlier — Remote</div>
+          <ul class="bullets">
+            <li>Provided expert-level solutions for complex technical and mathematical academic queries.</li>
+            <li>Collaborated on AI training and data refinement projects for LLMs, ensuring 100% accuracy against strict deadlines.</li>
+          </ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-top">
+            <div class="entry-title">AWS AI &amp; ML Virtual Intern</div>
+            <div class="entry-date">2023</div>
+          </div>
+          <div class="entry-org">AICTE — AWS Academy, India</div>
+          <ul class="bullets">
+            <li>Implemented cloud-based ML workflows covering data preprocessing, algorithm selection, and model deployment.</li>
+            <li>Focused on building reproducible pipelines and foundational deployment practices on AWS.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Key Projects</h2>
+
+        <div class="entry">
+          <div class="entry-top">
+            <div class="entry-title">LearnForge AI — AI-Powered Learning Platform</div>
+          </div>
+          <ul class="bullets">
+            <li>Built an AI education platform for real understanding, with structured explanations, RAG-based retrieval, chat memory, and PDF export.</li>
+            <li>Built backend APIs with Python, FastAPI, and the OpenAI API; used Supabase for conversation and user data.</li>
+            <li>Developed the frontend with Next.js, TypeScript, and Tailwind CSS.</li>
+          </ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-top">
+            <div class="entry-title">CareerPilot AI — Career Automation Platform</div>
+          </div>
+          <ul class="bullets">
+            <li>Built a career automation platform on one rule: the system never invents candidate facts — every claim traces to a verified facts vault.</li>
+            <li>Built truthful, ATS-friendly CV generation, compliance-gated job discovery, and explainable eligibility matching.</li>
+            <li>Stack: FastAPI, SQLAlchemy 2, Next.js 16, React 19, TypeScript, PostgreSQL/Supabase.</li>
+          </ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-top">
+            <div class="entry-title">Deepfake Video Detection — Final Year Project</div>
+          </div>
+          <ul class="bullets">
+            <li>Built a hybrid CNN-LSTM model to detect spatial and temporal inconsistencies in deepfake video, using transfer learning with an EfficientNet backbone on FaceForensics++ and Celeb-DF.</li>
+            <li>Deployed as a Flask web app with real-time video processing.</li>
+          </ul>
+        </div>
+
+        <div class="entry">
+          <div class="entry-top">
+            <div class="entry-title">Crop Protection from Animal Intrusion</div>
+          </div>
+          <ul class="bullets">
+            <li>Built a real-time CNN-based animal intrusion detection system trained on wild boar, deer, and other animal imagery, integrated with IoT sensors and Raspberry Pi for edge deployment.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Certifications &amp; Interests</h2>
+        <ul class="bullets">
+          <li><strong>AWS AI/ML Virtual Internship</strong> — AICTE, Completed 2023</li>
+          <li><strong>Interests:</strong> Large Language Models &amp; Generative AI, AI Ethics and Model Evaluation, Emerging AI Technologies, Cooking, Basketball.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
