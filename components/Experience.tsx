@@ -24,8 +24,8 @@ const experiences = [
   },
   {
     icon: Users,
-    title: "AI Trainer / Annotation Team Lead",
-    company: "LLM Dataset & AI Training Work",
+    title: "AI Engineer",
+    company: "Centific",
     period: "Professional Experience",
     description:
       "Managed AI training and annotation workflows for LLM datasets across NLP and generative AI tasks.",
