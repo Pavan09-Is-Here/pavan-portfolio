@@ -28,11 +28,11 @@ const experiences = [
     company: "Centific",
     period: "Professional Experience",
     description:
-      "Managed AI training and annotation workflows for LLM datasets across NLP and generative AI tasks.",
+      "Worked on AI training and annotation workflows for LLM datasets across NLP and generative AI tasks.",
     points: [
-      "Managed a 35-member team of annotators and AI trainers.",
       "Worked on NLP, AI training, and generative AI data quality tasks.",
       "Reviewed dataset quality, task consistency, and output accuracy.",
+      "Evaluated and refined AI model responses for accuracy and relevance.",
       "Supported structured workflows for improving AI model responses.",
     ],
   },
