@@ -2,7 +2,7 @@ import Background from "@/components/Background";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import SectionHeading from "@/components/SectionHeading";
-import { ArrowUpRight, Brain, Code2, Sparkles } from "lucide-react";
+import { ArrowUpRight, Brain, Code2, ShieldCheck } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
 const projects = [
@@ -26,14 +26,22 @@ const projects = [
     github: "https://github.com/Pavan09-Is-Here/learnforge-ai",
   },
   {
-    icon: Sparkles,
-    title: "AI Knowledge Builder",
-    status: "RAG + Memory System",
+    icon: ShieldCheck,
+    title: "CareerPilot AI",
+    status: "Career Automation Platform",
     description:
-      "A knowledge-focused AI assistant designed to give clear explanations, real-world use cases, contextual memory, and structured learning responses.",
-    stack: ["Python", "LLMs", "RAG", "Memory", "Vector Search"],
-    caseStudy: "#",
-    github: "#",
+      "A personal career automation platform built around one hard rule: the system never invents candidate facts. Every claim in a generated CV, cover letter, or application answer traces back to a verified facts vault, with compliance-gated job discovery, explainable matching, and safety gates for CAPTCHA, MFA, and irreversible submissions.",
+    stack: [
+      "FastAPI",
+      "SQLAlchemy 2",
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "PostgreSQL",
+      "Supabase",
+    ],
+    caseStudy: "https://careerpilot-ai-jade.vercel.app",
+    github: "https://github.com/Pavan09-Is-Here/careerpilot-ai",
   },
   {
     icon: Code2,
@@ -104,7 +112,13 @@ export default function ProjectsPage() {
                   <div className="flex flex-wrap gap-3 lg:flex-col">
                     <a
                       href={project.caseStudy}
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-blue-100"
+                      target={project.caseStudy.startsWith("http") ? "_blank" : undefined}
+                      rel={
+                        project.caseStudy.startsWith("http")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-violet-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/20 transition duration-300 hover:scale-105 hover:shadow-blue-500/30"
                     >
                       Case Study
                       <ArrowUpRight size={16} />

@@ -153,7 +153,7 @@ export default function FeaturedProject() {
 
               <a
   href="/learnforge-ai"
-  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-6 py-3 font-bold text-white transition hover:bg-white/15"
+  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-violet-500 px-6 py-3 font-bold text-white shadow-lg shadow-blue-500/20 transition duration-300 hover:scale-105 hover:shadow-blue-500/30"
 >
   View Case Study
   <ArrowUpRight size={18} />
