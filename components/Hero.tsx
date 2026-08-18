@@ -20,7 +20,6 @@ const highlights = [
 const stats = [
   { value: "AI/ML", label: "Primary Focus" },
   { value: "RAG", label: "Core Skill" },
-  { value: "35+", label: "AI Engineer" },
 ];
 
 export default function Hero() {
@@ -127,7 +126,7 @@ export default function Hero() {
               </p>
             </div>
 
-            <div className="mt-6 grid grid-cols-3 gap-3">
+            <div className="mt-6 grid grid-cols-2 gap-3">
               {stats.map((stat) => (
                 <div
                   key={stat.label}
