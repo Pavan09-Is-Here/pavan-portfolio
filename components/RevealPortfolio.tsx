@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 type Project = {
   rank: string;
@@ -35,8 +36,8 @@ const projects: Project[] = [
     title: "LearnForge AI",
     stack: ["Python", "FastAPI", "TypeScript", "Supabase", "RAG"],
     desc: "An AI learning platform aimed at understanding rather than recall. Structured explanations that carry real-world use, mechanism, trade-offs and examples; document-grounded retrieval over embeddings and vector search; persisted conversations; and export of a session into PDF study material.",
-    meta: ["Aug 2026", "Repository"],
-    href: "https://github.com/Pavan09-Is-Here/learnforge-ai",
+    meta: ["Aug 2026", "Case study"],
+    href: "/learnforge-ai",
   },
   {
     rank: "04",
@@ -117,6 +118,17 @@ const track = [
       "Sharpened reasoning, debugging, and decomposition",
     ],
   },
+];
+
+const keywords = [
+  "Machine Learning", "Supervised Learning", "Unsupervised Learning", "Classification",
+  "Regression", "Model Evaluation", "Feature Engineering", "Data Preprocessing",
+  "LLM Applications", "RAG Pipelines", "Prompt Engineering", "Embeddings",
+  "Vector Search", "Chat Memory", "Document Retrieval", "OpenAI API",
+  "Python", "FastAPI", "REST APIs", "Uvicorn", "API Integration", "PDF Generation",
+  "Next.js", "React", "TypeScript", "Tailwind CSS", "Component Design", "Responsive UI",
+  "Supabase", "PostgreSQL", "SQL", "Data Management",
+  "Git", "GitHub", "Node.js", "Vercel",
 ];
 
 const links = [
@@ -253,6 +265,30 @@ function renderMachineLayer(
   return true;
 }
 
+/** Rows point at either an external repo/live site or an internal case study. */
+function RowLink({
+  href,
+  className,
+  children,
+}: {
+  href: string;
+  className: string;
+  children: React.ReactNode;
+}) {
+  if (href.startsWith("http")) {
+    return (
+      <a className={className} href={href} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link className={className} href={href}>
+      {children}
+    </Link>
+  );
+}
+
 export default function RevealPortfolio() {
   const heroRef = useRef<HTMLElement | null>(null);
   const portraitRef = useRef<HTMLDivElement | null>(null);
@@ -262,6 +298,8 @@ export default function RevealPortfolio() {
   const readoutRef = useRef<HTMLDivElement | null>(null);
   const cueRef = useRef<HTMLSpanElement | null>(null);
   const humanRef = useRef<HTMLImageElement | null>(null);
+  const hintRef = useRef<HTMLDivElement | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const mcanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -347,8 +385,11 @@ export default function RevealPortfolio() {
         paint();
       } else nudge();
     };
+    const dismissHint = () => hintRef.current?.classList.add("used");
     hero.addEventListener("pointermove", track_);
     hero.addEventListener("pointerdown", track_);
+    hero.addEventListener("pointerdown", dismissHint, { once: true });
+    hero.addEventListener("pointermove", dismissHint, { once: true });
 
     // Idle drift before any pointer input, so the reveal announces itself.
     if (!reduce) {
@@ -423,6 +464,14 @@ export default function RevealPortfolio() {
             <a href="#track">Track</a>
           </nav>
           <a href="#contact">Contact</a>
+          <button
+            className="navtoggle"
+            aria-expanded={menuOpen}
+            aria-controls="navsheet"
+            onClick={() => setMenuOpen(true)}
+          >
+            Menu
+          </button>
         </div>
         <div className="bar bot">
           <p className="tagline">
@@ -432,6 +481,27 @@ export default function RevealPortfolio() {
           <span className="scrollcue" ref={cueRef}>
             (Scroll)
           </span>
+        </div>
+
+        <div
+          className="navsheet"
+          id="navsheet"
+          hidden={!menuOpen}
+        >
+          <button className="shut" onClick={() => setMenuOpen(false)}>
+            Close
+          </button>
+          {[
+            ["#thesis", "Thesis"],
+            ["#index", "Index"],
+            ["#capabilities", "Capabilities"],
+            ["#track", "Track"],
+            ["#contact", "Contact"],
+          ].map(([href, label]) => (
+            <a key={href} href={href} onClick={() => setMenuOpen(false)}>
+              {label}
+            </a>
+          ))}
         </div>
       </div>
 
@@ -455,6 +525,9 @@ export default function RevealPortfolio() {
             <div className="lift" />
             <div className="tex" />
           </div>
+        </div>
+        <div className="touchhint" ref={hintRef}>
+          Drag across to resolve
         </div>
         <div className="lens" ref={lensRef} />
         <div className="readout" ref={readoutRef}>
@@ -507,13 +580,7 @@ export default function RevealPortfolio() {
           </div>
           <div className="index">
             {projects.map((p) => (
-              <a
-                className="row"
-                key={p.rank}
-                href={p.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <RowLink key={p.rank} href={p.href} className="row">
                 <span className="rank">{p.rank}</span>
                 <div>
                   <h3>{p.title}</h3>
@@ -530,8 +597,8 @@ export default function RevealPortfolio() {
                   <br />
                   {p.meta[1]}
                 </span>
-                <span className="go">↗</span>
-              </a>
+                <span className="go">{p.href.startsWith("http") ? "↗" : "→"}</span>
+              </RowLink>
             ))}
           </div>
         </section>
@@ -552,6 +619,15 @@ export default function RevealPortfolio() {
                 <p>{c.body}</p>
               </div>
             ))}
+          </div>
+
+          <div className="keywords">
+            <div className="kl">Tools, methods and libraries</div>
+            <div className="chips">
+              {keywords.map((k) => (
+                <span key={k}>{k}</span>
+              ))}
+            </div>
           </div>
         </section>
 

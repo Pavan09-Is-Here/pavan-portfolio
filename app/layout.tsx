@@ -25,7 +25,16 @@ const newsreader = Newsreader({
   display: "swap",
 });
 
+// Absolute URLs for og:image. Vercel supplies the production host at build
+// time; set NEXT_PUBLIC_SITE_URL to override with a custom domain.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Pavan Alakunta | AI & ML Engineer",
   description:
     "AI & ML Engineer working on the boundary between what a model retrieves and what is actually true. Machine learning, LLM/RAG systems, and full-stack AI products.",
@@ -47,8 +56,23 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Pavan Alakunta | AI & ML Engineer",
     description:
-      "An interactive reveal portfolio: move across the portrait to resolve the human layer under the machine's reading of it.",
+      "An interactive reveal portfolio: move across the portrait to resolve the source photograph under the machine's reading of it.",
     type: "website",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Pavan Alakunta — AI & ML Engineer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pavan Alakunta | AI & ML Engineer",
+    description:
+      "Machine learning, LLM and RAG systems, and the full-stack products around them.",
+    images: ["/og.png"],
   },
 };
 
