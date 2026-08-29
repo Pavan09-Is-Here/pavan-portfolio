@@ -49,7 +49,8 @@ img{display:block}
   .bar.bot{flex-direction:column;align-items:flex-start;gap:6px}
 }
 .navtoggle{display:none;font:inherit;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--bone);background:none;border:0;padding:6px 2px;cursor:pointer}
-.navsheet{position:fixed;inset:0;z-index:90;background:var(--void);display:flex;flex-direction:column;justify-content:center;padding:0 var(--gutter);pointer-events:auto;animation:sheetin .26s ease}
+.navsheet{position:fixed;inset:0;z-index:90;background:var(--void);display:none;flex-direction:column;justify-content:center;padding:0 var(--gutter);pointer-events:auto}
+.navsheet.open{display:flex;animation:sheetin .26s ease}
 @keyframes sheetin{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.navsheet{animation:none}}
 .navsheet a{font-family:var(--disp);font-size:clamp(26px,8.5vw,42px);font-weight:800;font-stretch:108%;letter-spacing:-.035em;text-transform:none;color:var(--bone);padding:14px 0;border-bottom:var(--rule)}

@@ -484,7 +484,7 @@ export default function RevealPortfolio() {
         </div>
 
         <div
-          className="navsheet"
+          className={menuOpen ? "navsheet open" : "navsheet"}
           id="navsheet"
           hidden={!menuOpen}
         >

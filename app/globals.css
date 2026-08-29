@@ -6,6 +6,11 @@
   box-sizing: border-box;
 }
 
+/* Class selectors outrank the UA [hidden] rule; keep hidden authoritative. */
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
