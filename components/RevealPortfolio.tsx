@@ -126,6 +126,133 @@ const links = [
   { t: "Curriculum Vitae", v: "PDF ↗", href: "/Pavan_Alakunta_CV.pdf" },
 ];
 
+/**
+ * Draws the "machine reading" of the portrait: Sobel contour extraction over a
+ * blurred luminance pass, plus Bayer 8x8 ordered-dither quantisation, tinted
+ * violet. Runs once on load. Returns false if the canvas is unusable (e.g.
+ * a tainted origin), in which case the CSS duotone fallback stays visible.
+ */
+function renderMachineLayer(
+  img: HTMLImageElement,
+  canvas: HTMLCanvasElement,
+  opts: { maxw?: number; levels?: number; edgeGain?: number } = {}
+): boolean {
+  const MAXW = opts.maxw ?? 1000;
+  let w = img.naturalWidth || img.width;
+  let h = img.naturalHeight || img.height;
+  if (!w || !h) return false;
+  if (w > MAXW) {
+    h = Math.round((h * MAXW) / w);
+    w = MAXW;
+  }
+
+  const src = document.createElement("canvas");
+  src.width = w;
+  src.height = h;
+  const sctx = src.getContext("2d", { willReadFrequently: true });
+  if (!sctx) return false;
+  sctx.drawImage(img, 0, 0, w, h);
+
+  let data: ImageData;
+  try {
+    data = sctx.getImageData(0, 0, w, h);
+  } catch {
+    return false;
+  }
+  const px = data.data;
+  const n = w * h;
+
+  const lum = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const j = i * 4;
+    lum[i] = (px[j] * 0.299 + px[j + 1] * 0.587 + px[j + 2] * 0.114) / 255;
+  }
+
+  // Light box blur, so the gradient traces form rather than sensor noise.
+  const blur = new Float32Array(n);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let sum = 0;
+      let count = 0;
+      for (let dy = -1; dy <= 1; dy++) {
+        const yy = y + dy;
+        if (yy < 0 || yy >= h) continue;
+        for (let dx = -1; dx <= 1; dx++) {
+          const xx = x + dx;
+          if (xx < 0 || xx >= w) continue;
+          sum += lum[yy * w + xx];
+          count++;
+        }
+      }
+      blur[y * w + x] = sum / count;
+    }
+  }
+
+  const edge = new Float32Array(n);
+  let maxE = 0;
+  for (let y = 1; y < h - 1; y++) {
+    for (let x = 1; x < w - 1; x++) {
+      const k = y * w + x;
+      const tl = blur[k - w - 1];
+      const t = blur[k - w];
+      const tr = blur[k - w + 1];
+      const l = blur[k - 1];
+      const r = blur[k + 1];
+      const bl = blur[k + w - 1];
+      const b = blur[k + w];
+      const br = blur[k + w + 1];
+      const gx = tr + 2 * r + br - (tl + 2 * l + bl);
+      const gy = bl + 2 * b + br - (tl + 2 * t + tr);
+      const m = Math.sqrt(gx * gx + gy * gy);
+      edge[k] = m;
+      if (m > maxE) maxE = m;
+    }
+  }
+  if (maxE > 0) for (let i = 0; i < n; i++) edge[i] /= maxE;
+
+  const bayer = [
+    0, 32, 8, 40, 2, 34, 10, 42, 48, 16, 56, 24, 50, 18, 58, 26, 12, 44, 4, 36,
+    14, 46, 6, 38, 60, 28, 52, 20, 62, 30, 54, 22, 3, 35, 11, 43, 1, 33, 9, 41,
+    51, 19, 59, 27, 49, 17, 57, 25, 15, 47, 7, 39, 13, 45, 5, 37, 63, 31, 55,
+    23, 61, 29, 53, 21,
+  ];
+
+  const out = sctx.createImageData(w, h);
+  const op = out.data;
+  const LEVELS = opts.levels ?? 4;
+  const EDGE_GAIN = opts.edgeGain ?? 1.55;
+
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = y * w + x;
+      const thr = (bayer[(y & 7) * 8 + (x & 7)] + 0.5) / 64;
+
+      const v = Math.pow(blur[idx], 1.25);
+      let q = Math.floor(v * LEVELS + thr) / LEVELS;
+      if (q < 0) q = 0;
+      else if (q > 1) q = 1;
+      const base = q * 96;
+
+      let em = edge[idx] * EDGE_GAIN;
+      em = em < 0.1 ? 0 : Math.pow(Math.min(em, 1), 0.72);
+      const eg = em * 235;
+
+      const j = idx * 4;
+      op[j] = Math.min(255, base * 0.42 + eg * 0.58);
+      op[j + 1] = Math.min(255, base * 0.3 + eg * 0.4);
+      op[j + 2] = Math.min(255, base * 1.0 + eg * 1.0);
+      op[j + 3] = 255;
+    }
+  }
+
+  canvas.width = w;
+  canvas.height = h;
+  const cctx = canvas.getContext("2d");
+  if (!cctx) return false;
+  cctx.putImageData(out, 0, 0);
+  return true;
+}
+
 export default function RevealPortfolio() {
   const heroRef = useRef<HTMLElement | null>(null);
   const portraitRef = useRef<HTMLDivElement | null>(null);
@@ -134,6 +261,8 @@ export default function RevealPortfolio() {
   const lensRef = useRef<HTMLDivElement | null>(null);
   const readoutRef = useRef<HTMLDivElement | null>(null);
   const cueRef = useRef<HTMLSpanElement | null>(null);
+  const humanRef = useRef<HTMLImageElement | null>(null);
+  const mcanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -146,6 +275,17 @@ export default function RevealPortfolio() {
     if (!hero || !portrait || !mstack || !glow || !lens || !readout) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Machine layer: contour + dither reconstruction, drawn once.
+    const humanImg = humanRef.current;
+    const mcanvas = mcanvasRef.current;
+    const buildMachine = () => {
+      if (humanImg && mcanvas && renderMachineLayer(humanImg, mcanvas)) {
+        mstack.classList.add("has-canvas");
+      }
+    };
+    if (humanImg?.complete && humanImg.naturalWidth) buildMachine();
+    else humanImg?.addEventListener("load", buildMachine);
 
     let R = 150;
     let engaged = false;
@@ -262,6 +402,7 @@ export default function RevealPortfolio() {
       window.removeEventListener("scroll", onScroll);
       hero.removeEventListener("pointermove", track_);
       hero.removeEventListener("pointerdown", track_);
+      humanImg?.removeEventListener("load", buildMachine);
       io.disconnect();
       spy.disconnect();
       if (raf !== null) cancelAnimationFrame(raf);
@@ -300,11 +441,17 @@ export default function RevealPortfolio() {
         <span className="edgelabel">Move&nbsp;to&nbsp;resolve&nbsp;·&nbsp;AI&nbsp;&amp;&nbsp;ML&nbsp;Engineer</span>
         <div className="portrait" ref={portraitRef}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="human" src="/portrait.jpg" alt="Portrait of Pavan Alakunta" />
+          <img
+            className="human"
+            ref={humanRef}
+            src="/portrait.jpg"
+            alt="Portrait of Pavan Alakunta"
+          />
           <div className="mstack" ref={mstackRef}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/portrait.jpg" alt="" />
+            <img className="mfallback" src="/portrait.jpg" alt="" />
             <div className="duo" />
+            <canvas className="mcanvas" ref={mcanvasRef} />
             <div className="lift" />
             <div className="tex" />
           </div>
@@ -344,7 +491,7 @@ export default function RevealPortfolio() {
               <p>
                 The portrait above works the same way. What you see by default is the
                 machine&apos;s reading of me. What you uncover by moving across it is the
-                part that was always there.
+                photograph it was built from.
               </p>
             </div>
           </div>

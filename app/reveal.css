@@ -70,13 +70,16 @@ img{display:block}
   translate:0 -1.5vh;
 }
 .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.human{filter:grayscale(.9) sepia(.34) contrast(1.24) brightness(.88)}
+.human{filter:grayscale(.78) sepia(.3) contrast(1.2) brightness(1.02)}
 .mstack{position:absolute;inset:0;isolation:isolate;
   -webkit-mask-image:radial-gradient(circle var(--r,150px) at var(--px,50%) var(--py,38%),transparent 0 58%,#000 100%);
   mask-image:radial-gradient(circle var(--r,150px) at var(--px,50%) var(--py,38%),transparent 0 58%,#000 100%);
 }
 .mstack img{filter:grayscale(1) contrast(1.7) brightness(.52)}
 .duo{position:absolute;inset:0;background:var(--flux);mix-blend-mode:color;opacity:.92}
+.mcanvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .7s ease}
+.mstack.has-canvas .mcanvas{opacity:1}
+.mstack.has-canvas .mfallback,.mstack.has-canvas .duo{opacity:0}
 .lift{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 34%,rgba(124,92,255,.42),transparent 70%);mix-blend-mode:screen}
 .tex{
   position:absolute;inset:0;opacity:.55;
