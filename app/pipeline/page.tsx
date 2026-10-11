@@ -72,8 +72,8 @@ export default function PipelinePage() {
             Pavan Alakunta<sup>®</sup>
           </Link>
           <nav className="nav">
-            <Link href="/#thesis">Thesis</Link>
-            <Link href="/#index">Index</Link>
+            <Link href="/#systems">Systems</Link>
+            <Link href="/#measured">Measured</Link>
             <Link href="/#capabilities">Capabilities</Link>
             <Link href="/#track">Track</Link>
           </nav>
@@ -88,7 +88,7 @@ export default function PipelinePage() {
       </div>
 
       <header className="cshero">
-        <Link className="backlink" href="/#index">
+        <Link className="backlink" href="/#systems">
           ← Back to index
         </Link>
         <h1 className="cstitle">The Pipeline</h1>
@@ -329,7 +329,7 @@ export default function PipelinePage() {
               <div className="t">Email</div>
               <div className="v">pavanalakunta58@gmail.com</div>
             </a>
-            <Link className="lnk" href="/#index">
+            <Link className="lnk" href="/#systems">
               <div className="t">More work</div>
               <div className="v">Back to index</div>
             </Link>

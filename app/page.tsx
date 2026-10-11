@@ -1,5 +1,6 @@
-import RevealPortfolio from "@/components/RevealPortfolio";
+import InstrumentHome from "@/components/InstrumentHome";
+import "./instrument.css";
 
 export default function Home() {
-  return <RevealPortfolio />;
+  return <InstrumentHome />;
 }

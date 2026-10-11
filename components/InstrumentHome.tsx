@@ -87,7 +87,7 @@ const systems: System[] = [
     line: "Two readings of the same subject, and an instrument panel.",
     stack: ["Next.js", "TypeScript", "Vercel"],
     body:
-      "The reveal build stacks two renderings of one portrait and uses the pointer as a retrieval window over the one underneath. This panel is the other reading: the same work stated as measurements, with every figure traceable to a run rather than to a claim.",
+      "The reveal build — still live at /reveal — stacks two renderings of one portrait and uses the pointer as a retrieval window over the one underneath. This panel is the other reading: the same work stated as measurements, with every figure traceable to a run rather than to a claim.",
     facts: [
       { label: "Deployed", value: "yes · vercel", state: "yes" },
       { label: "Public repository", value: "yes", state: "yes" },
@@ -95,7 +95,7 @@ const systems: System[] = [
       { label: "Eval gate in CI", value: "not applicable", state: "na" },
     ],
     acts: [
-      { label: "The reveal build →", href: "/" },
+      { label: "The reveal build →", href: "/reveal" },
       { label: "Repository ↗", href: "https://github.com/Pavan09-Is-Here/pavan-portfolio", external: true },
     ],
     tags: [{ label: "live", tone: "on" }],
@@ -213,7 +213,7 @@ export default function InstrumentHome() {
       <div className="i-shell">
         {/* ------------------------------- bar ------------------------------ */}
         <header className="i-bar">
-          <Link className="i-mark" href="/v2">
+          <Link className="i-mark" href="/">
             Pavan Alakunta
           </Link>
           <span className="i-led">2 systems deployed</span>
@@ -530,7 +530,7 @@ export default function InstrumentHome() {
           <div className="i-foot">
             <span>Instrument panel · {MEASURED.runOn}</span>
             <span>Figures from evals/results/latest.json</span>
-            <Link href="/">The reveal build →</Link>
+            <Link href="/reveal">The reveal build →</Link>
           </div>
         </section>
       </div>

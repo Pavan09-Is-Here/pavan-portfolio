@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Pavan Alakunta | AI & ML Engineer",
   description:
-    "AI & ML Engineer working on the boundary between what a model retrieves and what is actually true. Machine learning, LLM/RAG systems, and full-stack AI products.",
+    "AI & ML Engineer working on the boundary between what a model retrieves and what is actually true. Machine learning, retrieval systems, eval harnesses, and the full-stack products around them.",
   keywords: [
     "Pavan Alakunta",
     "AI Engineer",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Pavan Alakunta | AI & ML Engineer",
     description:
-      "An interactive reveal portfolio: move across the portrait to resolve the source photograph under the machine's reading of it.",
+      "Systems, measurements and findings. Every claim is a link you can open or a number from a run you can reproduce.",
     type: "website",
     images: [
       {
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Pavan Alakunta | AI & ML Engineer",
     description:
-      "Machine learning, LLM and RAG systems, and the full-stack products around them.",
+      "Machine learning, retrieval systems, and the measurements behind them.",
     images: ["/og.png"],
   },
 };

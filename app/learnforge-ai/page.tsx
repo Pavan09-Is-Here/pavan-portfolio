@@ -71,8 +71,8 @@ export default function LearnForgePage() {
             Pavan Alakunta<sup>®</sup>
           </Link>
           <nav className="nav">
-            <Link href="/#thesis">Thesis</Link>
-            <Link href="/#index">Index</Link>
+            <Link href="/#systems">Systems</Link>
+            <Link href="/#measured">Measured</Link>
             <Link href="/pipeline">Pipeline</Link>
             <Link href="/#capabilities">Capabilities</Link>
             <Link href="/#track">Track</Link>
@@ -88,7 +88,7 @@ export default function LearnForgePage() {
       </div>
 
       <header className="cshero">
-        <Link className="backlink" href="/#index">
+        <Link className="backlink" href="/#systems">
           ← Back to index
         </Link>
         <h1 className="cstitle">LearnForge AI</h1>
@@ -231,7 +231,7 @@ export default function LearnForgePage() {
               <div className="t">Curriculum Vitae</div>
               <div className="v">PDF ↗</div>
             </a>
-            <Link className="lnk" href="/#index">
+            <Link className="lnk" href="/#systems">
               <div className="t">More work</div>
               <div className="v">Back to index</div>
             </Link>
