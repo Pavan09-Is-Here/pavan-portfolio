@@ -73,6 +73,7 @@ export default function LearnForgePage() {
           <nav className="nav">
             <Link href="/#thesis">Thesis</Link>
             <Link href="/#index">Index</Link>
+            <Link href="/pipeline">Pipeline</Link>
             <Link href="/#capabilities">Capabilities</Link>
             <Link href="/#track">Track</Link>
           </nav>
@@ -209,6 +210,10 @@ export default function LearnForgePage() {
           </div>
 
           <div className="links" style={{ marginTop: "clamp(48px,8vh,88px)" }}>
+            <Link className="lnk" href="/pipeline">
+              <div className="t">Teardown</div>
+              <div className="v">The pipeline, stage by stage →</div>
+            </Link>
             <a
               className="lnk"
               href="https://github.com/Pavan09-Is-Here/learnforge-ai"

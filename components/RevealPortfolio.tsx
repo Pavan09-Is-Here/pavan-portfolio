@@ -460,6 +460,7 @@ export default function RevealPortfolio() {
           <nav className="nav">
             <a href="#thesis">Thesis</a>
             <a href="#index">Index</a>
+            <Link href="/pipeline">Pipeline</Link>
             <a href="#capabilities">Capabilities</a>
             <a href="#track">Track</a>
           </nav>
@@ -502,6 +503,9 @@ export default function RevealPortfolio() {
               {label}
             </a>
           ))}
+          <Link href="/pipeline" onClick={() => setMenuOpen(false)}>
+            Pipeline
+          </Link>
         </div>
       </div>
 
