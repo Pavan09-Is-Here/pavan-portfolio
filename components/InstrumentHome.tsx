@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { MEASURED, SCOPES } from "./pipelineData";
@@ -235,19 +236,44 @@ export default function InstrumentHome() {
             </span>
           </div>
 
-          <h1 className="i-name">
-            Pavan
-            <br />
-            Alakunta<span>.</span>
-          </h1>
+          <div className="i-mast-grid">
+            <div>
+              <h1 className="i-name">
+                Pavan
+                <br />
+                Alakunta<span>.</span>
+              </h1>
 
-          <p className="i-sub">
-            I work on the boundary between what a model retrieves and what is
-            actually true. <strong>Everything stated on this page is either a
-            link you can open or a number from a run you can reproduce</strong> —
-            which turns out to be a harder constraint than it sounds, and a more
-            useful one than a list of technologies.
-          </p>
+              <p className="i-sub">
+                I work on the boundary between what a model retrieves and what is
+                actually true. <strong>Everything stated on this page is either a
+                link you can open or a number from a run you can reproduce</strong>{" "}
+                — which turns out to be a harder constraint than it sounds, and a
+                more useful one than a list of technologies.
+              </p>
+            </div>
+
+            <figure className="i-id">
+              <div className="plate">
+                <Image
+                  src="/portrait.jpg"
+                  alt="Pavan Alakunta"
+                  width={795}
+                  height={1000}
+                  priority
+                  sizes="(max-width: 860px) 42vw, 236px"
+                />
+                <span className="wash" aria-hidden />
+                <span className="scan" aria-hidden />
+              </div>
+
+              <figcaption className="cap">
+                <b>Pavan Alakunta</b>
+                <span>AI &amp; ML Engineer</span>
+                Hatfield, UK · MSc AI &amp; Robotics
+              </figcaption>
+            </figure>
+          </div>
         </section>
 
         {/* ----------------------------- readout --------------------------- */}
