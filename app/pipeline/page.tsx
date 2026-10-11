@@ -12,6 +12,16 @@ export const metadata: Metadata = {
     description:
       "Nine stages, labelled by what is actually running, with measured numbers from an eval harness that runs in CI.",
     type: "article",
+    // Next replaces the parent openGraph wholesale rather than merging it, so
+    // the image has to be restated here or social cards render without one.
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Pavan Alakunta — AI & ML Engineer",
+      },
+    ],
   },
 };
 

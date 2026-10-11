@@ -13,6 +13,16 @@ export const metadata: Metadata = {
     title: "Pavan Alakunta — Instrument Panel",
     description:
       "Systems, measurements and findings, stated as readouts rather than claims.",
+    // Next replaces the parent openGraph wholesale rather than merging it, so
+    // the image has to be restated here or social cards render without one.
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Pavan Alakunta — AI & ML Engineer",
+      },
+    ],
     type: "website",
   },
 };
