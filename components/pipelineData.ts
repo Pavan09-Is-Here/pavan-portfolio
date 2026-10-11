@@ -256,19 +256,21 @@ def tfidf_cosine(question, chunks):
     summary:
       "Chunks live in a Supabase table keyed by document and user. Retrieval reads every chunk for the document and scores them in Python.",
     decision:
-      "Keeping chunks in the same Postgres as the application rows. When an index does arrive, per-user scoping stays a WHERE clause the database enforces rather than a filter applied after the fact.",
+      "Keeping chunks in the same Postgres as the application rows. The owner id comes from a verified token rather than the request body, so per-user scoping is a WHERE clause the database enforces behind row-level security — not a filter applied after the fact.",
     counter:
       "Scoring in application code is fine at a few hundred chunks and will not survive a real library. The measured cost is not latency yet — retrieval runs in under a millisecond locally — it is that every chunk has to be fetched to score it.",
     evidence: { metric: "retrieval p50, local, one document", value: "0.07 ms" },
     code: {
       file: "backend/main.py",
-      source: `chunks_result = (
-    supabase.table("document_chunks")
-    .select("chunk_text, chunk_index")
-    .eq("document_id", request.document_id)
-    .eq("user_id", request.user_id)      # scoped in the query, not after it
-    .execute()
-)`,
+      source: `def ask_document(request: DocumentAskRequest,
+                 user_id: str = Depends(get_current_user_id)):
+    chunks_result = (
+        supabase.table("document_chunks")
+        .select("chunk_text, chunk_index")
+        .eq("document_id", request.document_id)
+        .eq("user_id", user_id)       # from the verified token, not the body,
+        .execute()                    # and scoped in the query, not after it
+    )`,
     },
   },
   {
