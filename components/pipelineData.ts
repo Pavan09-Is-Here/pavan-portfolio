@@ -1,62 +1,172 @@
 /**
  * ---------------------------------------------------------------------------
- * A NOTE ON THE NUMBERS
+ * WHERE THESE NUMBERS COME FROM
  * ---------------------------------------------------------------------------
- * Every figure in this file is a sample value, present so the instrument on
- * /pipeline has something coherent to compute. Replace each one with the
- * output of the eval harness before presenting the page as measured work.
- * While SAMPLE_DATA is true the page renders an explicit "sample run" flag.
+ * Everything in MEASURED is the output of the eval harness in the
+ * learnforge-ai repository (`python evals/run_eval.py`), run against 52
+ * labelled cases over a three-document fixture corpus. Regenerate it from
+ * `evals/results/latest.json` after any run; the harness is deterministic, so
+ * the same corpus and golden set reproduce the same figures.
+ *
+ * Nothing on this page is a sample value any more. Where a figure does not
+ * exist yet — anything needing a model to judge it — the page says so instead
+ * of estimating it.
  */
-export const SAMPLE_DATA = true;
 
-export type Deltas = {
-  recall?: number;
-  faithfulness?: number;
-  latencyMs?: number;
-  costPer1k?: number;
+export const MEASURED = {
+  runOn: "2026-10-11",
+  command: "python evals/run_eval.py",
+  corpus: {
+    documents: 3,
+    chunks: 17,
+    cases: 52,
+    answerable: 46,
+    unanswerable: 6,
+    shapes: { literal: 27, paraphrase: 16, multi: 3, unanswerable: 6 },
+  },
 };
+
+export type Scope = "document" | "corpus";
+
+export type Row = {
+  id: string;
+  name: string;
+  /** What the strategy actually is, stated without euphemism. */
+  what: string;
+  live?: boolean;
+  recall1: number;
+  recall3: number;
+  mrr: number;
+  /** Threshold-free answerable/unanswerable separability (Mann-Whitney). */
+  gate: number;
+  p50ms: number;
+  canRefuse: boolean;
+  byShape: { literal: number; paraphrase: number; multi: number };
+};
+
+export const SCOPES: {
+  id: Scope;
+  label: string;
+  note: string;
+  rows: Row[];
+}[] = [
+  {
+    id: "document",
+    label: "Inside one document",
+    note:
+      "What LearnForge does today — /documents/ask filters to a single document_id, so retrieval only ever sees that document's chunks.",
+    rows: [
+      {
+        id: "prod_keyword",
+        name: "Keyword overlap",
+        what: "Two points per matching word, plus repeats. What is deployed.",
+        live: true,
+        recall1: 0.804, recall3: 0.957, mrr: 0.880, gate: 0.750, p50ms: 0.07,
+        canRefuse: false,
+        byShape: { literal: 1.0, paraphrase: 0.875, multi: 1.0 },
+      },
+      {
+        id: "bm25",
+        name: "BM25",
+        what: "Rarity weighting, term saturation at k1 = 1.2, length normalisation at b = 0.75.",
+        recall1: 0.804, recall3: 0.935, mrr: 0.882, gate: 0.931, p50ms: 0.41,
+        canRefuse: true,
+        byShape: { literal: 1.0, paraphrase: 0.812, multi: 1.0 },
+      },
+      {
+        id: "tfidf_cosine",
+        name: "TF-IDF cosine",
+        what: "TF-IDF vectors over the corpus vocabulary. Not a learned embedding.",
+        recall1: 0.804, recall3: 0.935, mrr: 0.886, gate: 0.960, p50ms: 0.77,
+        canRefuse: true,
+        byShape: { literal: 1.0, paraphrase: 0.812, multi: 1.0 },
+      },
+      {
+        id: "hybrid_rrf",
+        name: "Hybrid · RRF",
+        what: "Reciprocal rank fusion, k = 60, over the two lists above.",
+        recall1: 0.804, recall3: 0.935, mrr: 0.886, gate: 0.645, p50ms: 1.22,
+        canRefuse: true,
+        byShape: { literal: 1.0, paraphrase: 0.812, multi: 1.0 },
+      },
+    ],
+  },
+  {
+    id: "corpus",
+    label: "Across every document",
+    note:
+      "Harder, and where the strategies separate: the retriever has to pick the right document before it can pick the right passage.",
+    rows: [
+      {
+        id: "prod_keyword",
+        name: "Keyword overlap",
+        what: "Two points per matching word, plus repeats. What is deployed.",
+        live: true,
+        recall1: 0.739, recall3: 0.913, mrr: 0.828, gate: 0.676, p50ms: 0.18,
+        canRefuse: false,
+        byShape: { literal: 1.0, paraphrase: 0.75, multi: 1.0 },
+      },
+      {
+        id: "bm25",
+        name: "BM25",
+        what: "Rarity weighting, term saturation at k1 = 1.2, length normalisation at b = 0.75.",
+        recall1: 0.804, recall3: 0.913, mrr: 0.874, gate: 0.833, p50ms: 1.23,
+        canRefuse: true,
+        byShape: { literal: 1.0, paraphrase: 0.75, multi: 1.0 },
+      },
+      {
+        id: "tfidf_cosine",
+        name: "TF-IDF cosine",
+        what: "TF-IDF vectors over the corpus vocabulary. Not a learned embedding.",
+        recall1: 0.804, recall3: 0.935, mrr: 0.874, gate: 0.873, p50ms: 2.08,
+        canRefuse: true,
+        byShape: { literal: 1.0, paraphrase: 0.812, multi: 1.0 },
+      },
+      {
+        id: "hybrid_rrf",
+        name: "Hybrid · RRF",
+        what: "Reciprocal rank fusion, k = 60, over the two lists above.",
+        recall1: 0.804, recall3: 0.913, mrr: 0.874, gate: 0.565, p50ms: 3.26,
+        canRefuse: true,
+        byShape: { literal: 1.0, paraphrase: 0.75, multi: 1.0 },
+      },
+    ],
+  },
+];
+
+/* ------------------------------------------------------------------ *
+ * The nine stages, each labelled with what is actually running.
+ * ------------------------------------------------------------------ */
+
+export type Status = "shipped" | "partial" | "planned";
 
 export type Stage = {
   id: string;
-  /** Mono code used in place of an icon, matching the site's capability cards. */
   k: string;
   name: string;
   phase: "Data plane" | "Serving path" | "Quality loop";
-  kind: "offline" | "runtime";
+  status: Status;
   /** One line under the stage name in the chain. */
   role: string;
   summary: string;
-  kept: string;
-  cut: string;
-  impact: { metric: string; before: string; after: string };
-  /** Milliseconds this stage adds to a single request. Offline stages add 0. */
-  traceMs: number;
-  /** Absent when the stage is structural and cannot be switched off. */
-  toggle?: { label: string; deltas: Deltas };
+  /** For shipped work: the decision. For planned work: what the eval says to do. */
+  decision: string;
+  /** For shipped work: the rejected option. For planned work: the measured reason. */
+  counter: string;
+  evidence?: { metric: string; value: string };
   code: { file: string; source: string };
 };
 
-/** The floor: single-vector retrieval, no tuning, no guardrails. */
-export const BASELINE = {
-  recall: 0.61,
-  faithfulness: 0.68,
-  latencyMs: 740,
-  costPer1k: 1.8,
+export const STATUS_LABEL: Record<Status, string> = {
+  shipped: "Running",
+  partial: "Partly running",
+  planned: "Measured next",
 };
 
 export const phases = [
-  {
-    name: "Data plane" as const,
-    note: "Offline. Runs on upload, never on the request path.",
-  },
-  {
-    name: "Serving path" as const,
-    note: "Online. Every millisecond here is in the user's budget.",
-  },
-  {
-    name: "Quality loop" as const,
-    note: "Continuous. Turns production behaviour back into test data.",
-  },
+  { name: "Data plane" as const, note: "Offline. Runs on upload, never on the request path." },
+  { name: "Serving path" as const, note: "Online. Every millisecond here is in the user's budget." },
+  { name: "Quality loop" as const, note: "Continuous. Turns production behaviour back into test data." },
 ];
 
 export const stages: Stage[] = [
@@ -65,30 +175,23 @@ export const stages: Stage[] = [
     k: "IN",
     name: "Ingest & parse",
     phase: "Data plane",
-    kind: "offline",
-    role: "PDF, notes, pasted text → structured markdown",
+    status: "shipped",
+    role: "PDF upload → extracted text → stored rows",
     summary:
-      "Accept a document, normalise it to markdown with its heading tree intact, and deduplicate by content hash so the same source is never indexed twice.",
-    kept:
-      "Parse to structured markdown and keep the headings. Headings are the cheapest context signal available, and every stage downstream assumes they exist.",
-    cut:
-      "A flat text dump. Faster to build, but it destroyed tables and heading structure, so chunks arrived with no idea which section they came from.",
-    impact: { metric: "Documents parsed without structure loss", before: "71%", after: "96%" },
-    traceMs: 0,
+      "A PDF is uploaded, pypdf extracts its text page by page, and the result is stored against the user with a document row and its chunks.",
+    decision:
+      "Parsing happens once, at upload, and the request path never touches a PDF. That single choice is why question latency is dominated by the model rather than by file handling.",
+    counter:
+      "Extraction currently drops structure: headings and tables arrive as flat text. The chunker downstream has no section context to attach, which is the root of the paraphrase misses the eval reports.",
+    evidence: { metric: "parse work on the request path", value: "none" },
     code: {
-      file: "api/ingest.py",
-      source: `@router.post("/ingest")
-async def ingest(file: UploadFile, user=Depends(current_user)):
-    raw = await file.read()
-    digest = hashlib.sha256(raw).hexdigest()
+      file: "backend/main.py",
+      source: `reader = PdfReader(io.BytesIO(await file.read()))
+text = "".join((page.extract_text() or "") for page in reader.pages)
 
-    if await docs.exists(user.id, digest):
-        return {"status": "already_indexed", "hash": digest}
-
-    md = pdf_to_markdown(raw)        # keeps H1/H2/H3 and tables
-    doc = await docs.create(user.id, digest, md)
-    await queue.enqueue(chunk_document, doc.id)
-    return {"status": "queued", "doc_id": doc.id}`,
+document_id = insert_document(user_id, file.filename)
+for i, chunk in enumerate(split_text_into_chunks(text)):
+    insert_chunk(document_id, user_id, i, chunk)`,
     },
   },
   {
@@ -96,33 +199,27 @@ async def ingest(file: UploadFile, user=Depends(current_user)):
     k: "CH",
     name: "Chunk",
     phase: "Data plane",
-    kind: "offline",
-    role: "512 tokens, 64 overlap, breadcrumb attached",
+    status: "partial",
+    role: "fixed 1,200 characters, no overlap, no breadcrumb",
     summary:
-      "Split recursively — heading, then paragraph, then sentence — into 512-token windows with 64 tokens of overlap, and prepend a breadcrumb to every chunk.",
-    kept:
-      "Prepend 'document > H1 > H2' to each chunk before embedding. A chunk reading 'it decays exponentially' is unretrievable on its own; with the breadcrumb it is specific.",
-    cut:
-      "Fixed 1,000-character splits. Cheap, but they cut through tables and code blocks, and those orphaned halves were exactly the chunks that produced wrong answers.",
-    impact: { metric: "recall@5", before: "0.61", after: "0.68" },
-    traceMs: 0,
-    toggle: {
-      label: "Breadcrumbs",
-      deltas: { recall: 0.07, faithfulness: 0.03, costPer1k: 0.1 },
-    },
+      "Whitespace is collapsed and the text is cut into 1,200-character windows. Simple, deterministic, and the thing the eval chunks with too, so measurement and production never diverge.",
+    decision:
+      "Keeping one chunker, imported by both the API and the harness. A chunker that exists twice is a chunker that disagrees with itself.",
+    counter:
+      "Fixed windows cut through sentences and tables, and no heading breadcrumb is attached. The eval localises the cost: every miss in the run is a paraphrased question, at recall@3 0.75 to 0.88 against 1.000 for literal ones.",
+    evidence: { metric: "recall@3 · paraphrased questions", value: "0.75 – 0.88" },
     code: {
-      file: "pipeline/chunk.py",
-      source: `def chunk(md: str, title: str) -> list[Chunk]:
-    out = []
-    for section in split_on_headings(md):
-        crumb = " > ".join([title, *section.heading_path])
-        for window in token_windows(section.body, size=512, overlap=64):
-            out.append(Chunk(
-                text=f"{crumb}\\n\\n{window}",   # breadcrumb travels with the chunk
-                heading_path=section.heading_path,
-                tokens=count_tokens(window),
-            ))
-    return out`,
+      file: "backend/retrieval.py",
+      source: `def split_text_into_chunks(text: str, chunk_size: int = 1200) -> list[str]:
+    clean_text = " ".join(text.split())
+    chunks = []
+
+    for i in range(0, len(clean_text), chunk_size):
+        chunk = clean_text[i:i + chunk_size]
+        if chunk.strip():
+            chunks.append(chunk)
+
+    return chunks`,
     },
   },
   {
@@ -130,30 +227,23 @@ async def ingest(file: UploadFile, user=Depends(current_user)):
     k: "EM",
     name: "Embed",
     phase: "Data plane",
-    kind: "offline",
-    role: "1536-dim vectors, batched, hash-cached",
+    status: "planned",
+    role: "not built — the eval says what it has to beat",
     summary:
-      "Batch chunks 128 at a time into a 1536-dimension embedding model and cache vectors by chunk hash, so re-ingesting an edited document costs almost nothing.",
-    kept:
-      "The smaller embedding model. On this corpus the larger one bought roughly two points of recall for about three times the spend — ground the reranker recovers more cheaply.",
-    cut:
-      "Embedding on the request path. Moving it to a background worker took the ingest endpoint from seconds to a sub-200ms enqueue.",
-    impact: { metric: "Re-index cost after an edit", before: "$0.41", after: "$0.02" },
-    traceMs: 0,
+      "Nothing is embedded today. Retrieval is lexical from end to end, so a question that avoids the document's own wording has nothing to match against.",
+    decision:
+      "The target is already set: beat TF-IDF cosine at recall@1 0.804 and MRR 0.886 on the same 52 cases, and specifically lift paraphrased recall@3 above 0.812. If an embedding model cannot clear a bag-of-words baseline on this corpus, it is not earning its latency.",
+    counter:
+      "Stated plainly: TF-IDF is not semantic search. It is in the harness to establish the floor a real embedding has to clear, not to stand in for one.",
+    evidence: { metric: "TF-IDF floor to beat · recall@1", value: "0.804" },
     code: {
-      file: "pipeline/embed.py",
-      source: `async def embed_all(chunks: list[Chunk]) -> list[list[float]]:
-    missing = [c for c in chunks if not cache.has(c.hash)]
+      file: "evals/strategies.py",
+      source: `# The floor an embedding model has to clear, measured on the same cases.
+def tfidf_cosine(question, chunks):
+    return TfidfIndex(chunks).score(question)
 
-    for batch in batched(missing, 128):
-        res = await client.embeddings.create(
-            model="text-embedding-3-small",
-            input=[c.text for c in batch],
-        )
-        for c, item in zip(batch, res.data):
-            cache.put(c.hash, item.embedding)
-
-    return [cache.get(c.hash) for c in chunks]`,
+# Add the candidate beside it and the comparison is one command:
+#   python evals/run_eval.py --strategy tfidf_cosine --strategy embeddings`,
     },
   },
   {
@@ -161,32 +251,24 @@ async def ingest(file: UploadFile, user=Depends(current_user)):
     k: "IX",
     name: "Index",
     phase: "Data plane",
-    kind: "offline",
-    role: "pgvector HNSW + tsvector, one Postgres",
+    status: "partial",
+    role: "Postgres rows today, no vector or keyword index",
     summary:
-      "Store vectors in Postgres behind an HNSW index, alongside a generated tsvector column for keyword search, with row-level security scoping every read to its owner.",
-    kept:
-      "One database for vectors, keyword search and application rows. Keeping retrieval next to the metadata makes per-user filtering a WHERE clause instead of a second service.",
-    cut:
-      "A standalone vector store. It indexed marginally faster, but every per-user filter became an application-side join that row-level security already does for free.",
-    impact: { metric: "Filtered query p95", before: "210ms", after: "48ms" },
-    traceMs: 0,
+      "Chunks live in a Supabase table keyed by document and user. Retrieval reads every chunk for the document and scores them in Python.",
+    decision:
+      "Keeping chunks in the same Postgres as the application rows. When an index does arrive, per-user scoping stays a WHERE clause the database enforces rather than a filter applied after the fact.",
+    counter:
+      "Scoring in application code is fine at a few hundred chunks and will not survive a real library. The measured cost is not latency yet — retrieval runs in under a millisecond locally — it is that every chunk has to be fetched to score it.",
+    evidence: { metric: "retrieval p50, local, one document", value: "0.07 ms" },
     code: {
-      file: "migrations/002_index.sql",
-      source: `alter table chunks
-  add column embedding vector(1536),
-  add column fts tsvector generated always as
-    (to_tsvector('english', text)) stored;
-
-create index chunks_hnsw on chunks
-  using hnsw (embedding vector_cosine_ops)
-  with (m = 16, ef_construction = 64);
-
-create index chunks_fts on chunks using gin (fts);
-
-alter table chunks enable row level security;
-create policy own_chunks on chunks
-  for select using (auth.uid() = user_id);`,
+      file: "backend/main.py",
+      source: `chunks_result = (
+    supabase.table("document_chunks")
+    .select("chunk_text, chunk_index")
+    .eq("document_id", request.document_id)
+    .eq("user_id", request.user_id)      # scoped in the query, not after it
+    .execute()
+)`,
     },
   },
   {
@@ -194,33 +276,27 @@ create policy own_chunks on chunks
     k: "RT",
     name: "Retrieve",
     phase: "Serving path",
-    kind: "runtime",
-    role: "vector ∪ keyword, fused with RRF",
+    status: "partial",
+    role: "keyword overlap scoring · hybrid measured, not shipped",
     summary:
-      "Embed the question, take the top 20 by cosine distance and the top 20 by keyword rank, then fuse both lists with reciprocal rank fusion.",
-    kept:
-      "Hybrid retrieval. Vector search alone kept missing exact tokens — acronyms, error codes, function names — which is precisely what people paste into a learning tool.",
-    cut:
-      "Pure vector top-k. It looked fine on paraphrased questions and failed on every literal lookup, the most common query shape in the logs.",
-    impact: { metric: "recall@5", before: "0.68", after: "0.79" },
-    traceMs: 95,
-    toggle: {
-      label: "Hybrid + RRF",
-      deltas: { recall: 0.11, faithfulness: 0.02, latencyMs: 45, costPer1k: 0.05 },
-    },
+      "Content words from the question are matched against each chunk: two points for a hit, extra for repeats, ten for the question appearing verbatim. The top eight scoring chunks become the context.",
+    decision:
+      "The eval compares it against three alternatives on identical cases. Inside one document it holds its own — recall@1 0.804, the same as every other strategy. That is a real result, and it is why replacing it was not the first thing I did.",
+    counter:
+      "Across documents it falls behind: recall@1 0.739 against 0.804, MRR 0.828 against 0.874. The weakness is telling documents apart, and the single-document scope in production hides it entirely.",
+    evidence: { metric: "recall@1 · corpus scope, deployed vs best", value: "0.739 → 0.804" },
     code: {
-      file: "pipeline/retrieve.sql",
-      source: `with vec as (
-  select id, row_number() over (order by embedding <=> $1) as rank
-  from chunks where user_id = $2
-  order by embedding <=> $1 limit 20
-), kw as (
-  select id, row_number() over (order by ts_rank(fts, $3) desc) as rank
-  from chunks where user_id = $2 and fts @@ $3 limit 20
-)
-select id, sum(1.0 / (60 + rank)) as rrf       -- reciprocal rank fusion
-from (select * from vec union all select * from kw) fused
-group by id order by rrf desc limit 12;`,
+      file: "backend/retrieval.py",
+      source: `for term in terms:
+    if term in text:
+        score += 2
+
+    occurrences = text.count(term)
+    if occurrences > 1:
+        score += occurrences
+
+if question.lower() in text:
+    score += 10`,
     },
   },
   {
@@ -228,32 +304,23 @@ group by id order by rrf desc limit 12;`,
     k: "RR",
     name: "Rerank & gate",
     phase: "Serving path",
-    kind: "runtime",
-    role: "cross-encoder to top 5, floor at 0.32",
+    status: "planned",
+    role: "not built — and the eval shows exactly what it costs",
     summary:
-      "Score the twelve fused candidates with a cross-encoder, keep the best five, and drop anything below the relevance floor.",
-    kept:
-      "The refusal path. If nothing clears the floor the pipeline skips generation and says so — a refusal is a correct answer, while a confident guess is a defect.",
-    cut:
-      "Always passing the top five through. It guaranteed the model had something to work with, which is exactly how a hallucination gets written in a confident tone.",
-    impact: { metric: "Answers citing an irrelevant chunk", before: "18%", after: "4%" },
-    traceMs: 120,
-    toggle: {
-      label: "Cross-encoder",
-      deltas: { recall: 0.06, faithfulness: 0.07, latencyMs: 120, costPer1k: 0.6 },
-    },
+      "There is no reranker and no relevance floor. The selector keeps whatever scored above zero and, when nothing scored, returns the first four chunks anyway.",
+    decision:
+      "The gate comes before the reranker. All six unanswerable questions in the eval came back with context: four scored non-zero against documents that do not contain the answer, and the other two hit the fallback. A zero score is the system saying it found nothing, and the fallback rewrites that as 'here is some text'.",
+    counter:
+      "The measurement that matters here is separability — can any threshold tell answerable from unanswerable. Deployed scoring reaches 0.750 inside a document; TF-IDF reaches 0.960 on the same questions. A gate is viable, just not on these scores.",
+    evidence: { metric: "separability · deployed vs best", value: "0.750 → 0.960" },
     code: {
-      file: "pipeline/rerank.py",
-      source: `RELEVANCE_FLOOR = 0.32
+      file: "backend/retrieval.py",
+      source: `best = [c for c in scored if c.score > 0][:top_k]
 
-async def rerank(question: str, candidates: list[Chunk]) -> list[Chunk]:
-    scores = await cross_encoder.score(question, [c.text for c in candidates])
-    ranked = sorted(zip(candidates, scores), key=lambda p: -p[1])
-    kept = [c for c, s in ranked[:5] if s >= RELEVANCE_FLOOR]
-
-    if not kept:
-        raise NoGroundingError(question)   # grounded refusal, no generation
-    return kept`,
+if not best:
+    best = scored[:fallback_k]   # <- this is the bug the eval caught:
+                                 #    "nothing matched" becomes "here are
+                                 #    four arbitrary chunks"`,
     },
   },
   {
@@ -261,34 +328,30 @@ async def rerank(question: str, candidates: list[Chunk]) -> list[Chunk]:
     k: "GN",
     name: "Generate",
     phase: "Serving path",
-    kind: "runtime",
-    role: "structured, streamed, citations validated",
+    status: "partial",
+    role: "structured answer, document-only instruction, no citation check",
     summary:
-      "Stream a structured answer — mechanism, worked example, trade-offs — with inline citations back to chunk ids, then validate every citation before the answer is accepted.",
-    kept:
-      "Post-generation citation validation. An answer citing a chunk id the retriever never returned is rejected and retried once, then refused.",
-    cut:
-      "Free-form prose with a sources list bolted on the end. Readers could not tell which sentence came from their document and which came from the model's memory.",
-    impact: { metric: "Claims traceable to a chunk", before: "54%", after: "93%" },
-    traceMs: 640,
-    toggle: {
-      label: "Citation check",
-      deltas: { faithfulness: 0.09, latencyMs: 15, costPer1k: 0.05 },
-    },
+      "The retrieved chunks are rendered into a prompt that forbids outside knowledge and fixes the answer's shape — direct answer, explanation from the document, details, sources used, summary — and Llama 3.3 70B on Groq generates it at temperature 0.4.",
+    decision:
+      "Instructing the model to answer only from the context, and to say when the document does not contain the answer. That instruction is doing real work, and it is also the only thing standing between a bad retrieval and a confident wrong answer.",
+    counter:
+      "The model is asked to name the chunks it used, and nothing checks that it did. A citation to a chunk the retriever never returned would pass straight through. Validating citations against the retrieved ids is cheap; measuring whether it helps needs a judge model, which the harness deliberately does not have yet.",
     code: {
-      file: "pipeline/generate.py",
-      source: `answer = await client.messages.create(
-    model="claude-sonnet-5",
-    temperature=0.2,
-    system=[{"type": "text", "text": SYSTEM,
-             "cache_control": {"type": "ephemeral"}}],   # cached across turns
-    messages=[{"role": "user", "content": render(question, chunks)}],
-    stream=True,
-)
+      file: "backend/main.py",
+      source: `prompt = f"""
+You are LearnForge AI Document Mode.
 
-cited = extract_citations(answer)
-if not cited <= {c.id for c in chunks}:
-    raise UngroundedCitation(cited)   # retry once, then refuse`,
+Answer the user's question using ONLY the document context below.
+
+Rules:
+- If the answer is not found in the document, say:
+  "I could not find this information in the uploaded document."
+- Do not make up information.
+- Mention which source chunks helped.
+
+Document Context:
+{context}
+"""`,
     },
   },
   {
@@ -296,27 +359,27 @@ if not cited <= {c.id for c in chunks}:
     k: "EV",
     name: "Evaluate",
     phase: "Quality loop",
-    kind: "offline",
-    role: "golden set scored on every pull request",
+    status: "shipped",
+    role: "52 labelled cases, 4 strategies, gated in CI",
     summary:
-      "A golden set of labelled question and answer pairs, scored for faithfulness, answer relevance and context precision on every pull request.",
-    kept:
-      "The eval as a CI gate. A prompt change that drops faithfulness by more than two points fails the build, so a quality regression cannot ship quietly.",
-    cut:
-      "Eyeballing a handful of answers after each change. It missed every regression that only appeared on the long tail of question shapes.",
-    impact: { metric: "Quality regressions reaching production", before: "3 of 9 releases", after: "0 of 14" },
-    traceMs: 0,
+      "A deterministic harness: 52 labelled questions over a three-document corpus, scored for recall@k, precision@3, MRR and separability, across four retrieval strategies and two scopes. No API key, no database, no network — it runs in under a second.",
+    decision:
+      "Making it offline and stdlib-only was the design constraint, not an accident. A gate that needs a secret runs occasionally; a gate that needs nothing runs on every pull request. Gold labels are exact spans resolved to chunk ids at load time, so re-chunking cannot silently invalidate a label, and a typo in a label fails loudly instead of scoring zero.",
+    counter:
+      "The corpus is small — 17 chunks — so recall@5 saturates in document scope. The harness flags that in its own output rather than letting a saturated metric read as a result. Growing the labelled set is the highest-value next step, and production downvotes are the right source.",
+    evidence: { metric: "labelled cases · regression budget", value: "52 · 0.02" },
     code: {
-      file: "tests/test_eval_gate.py",
-      source: `BUDGET = 0.02   # tolerated drop against the committed baseline
+      file: "evals/run_eval.py",
+      source: `GATED_METRICS = ("recall@1", "recall@3", "recall@5", "mrr", "gate_auroc")
+REGRESSION_BUDGET = 0.02
 
-def test_no_quality_regression():
-    report = run_eval(golden_set, pipeline)
-    baseline = json.load(open("evals/baseline.json"))
+for metric in GATED_METRICS:
+    drop = base[metric] - row[metric]
+    if drop > REGRESSION_BUDGET:
+        failures.append(f"{scope}/{row['strategy']}/{metric}: "
+                        f"{base[metric]:.3f} -> {row[metric]:.3f}")
 
-    for metric in ("faithfulness", "answer_relevancy", "context_precision"):
-        drop = baseline[metric] - report[metric]
-        assert drop <= BUDGET, f"{metric} fell {drop:.3f} (budget {BUDGET})"`,
+return 1 if failures else 0   # the build fails, quietly is not an option`,
     },
   },
   {
@@ -324,146 +387,91 @@ def test_no_quality_regression():
     k: "OB",
     name: "Observe",
     phase: "Quality loop",
-    kind: "runtime",
-    role: "per-request traces, cost, feedback → eval set",
+    status: "planned",
+    role: "not built — the loop the eval needs to keep growing",
     summary:
-      "Trace every request stage by stage with tokens, cost and latency, and capture every downvote with the retrieved context still attached.",
-    kept:
-      "Routing downvotes straight into the golden set review queue. The questions real users ask make better eval data than anything written by hand.",
-    cut:
-      "Aggregate dashboards alone. Averages reported a healthy system while individual users hit the same retrieval miss over and over.",
-    impact: { metric: "Golden set size", before: "40 hand-written", after: "180 user-derived" },
-    traceMs: 8,
-    toggle: {
-      label: "Trace + feedback",
-      deltas: { latencyMs: 8, costPer1k: 0.02 },
-    },
+      "Nothing traces a request stage by stage, and nothing captures a downvote with the retrieved context attached. Errors print to the log and that is all.",
+    decision:
+      "This is what makes the eval improve on its own. A downvote carrying the question, the retrieved chunks and the answer is a finished eval case; hand-written questions drift away from what people actually ask. The harness is already shaped to receive them — a case is one line of JSONL.",
+    counter:
+      "Aggregate numbers would not have found any of this. The separability failure and the paraphrase gap both came out of per-case inspection, which is the same granularity production tracing needs.",
+    evidence: { metric: "corpus size · now vs useful", value: "17 chunks" },
     code: {
-      file: "pipeline/observe.py",
-      source: `@trace("answer")
-async def answer(question: str, user: User) -> Answer:
-    with span("retrieve") as s:
-        chunks = await retrieve(question, user)
-        s.set(candidates=len(chunks))
+      file: "evals/golden.jsonl",
+      source: `{"id":"q12","shape":"paraphrase","doc":"optimizers",
+ "question":"Is the early instability about how big the steps are,
+             or about how unreliable they are?",
+ "gold_spans":["This is a variance problem, not a scale problem"]}
 
-    with span("generate") as s:
-        out = await generate(question, chunks)
-        s.set(in_tokens=out.usage.input, out_tokens=out.usage.output,
-              usd=price(out.usage))
-
-    return out   # a downvote replays this trace into the eval queue`,
+# A downvote already carries every field this line needs.`,
     },
   },
 ];
 
 /* ------------------------------------------------------------------ *
- * The specimen: one question, answered by whatever pipeline is built.
+ * A constructed illustration of the failure the gate statistic
+ * measures. Not a transcript — the page says so where it renders.
  * ------------------------------------------------------------------ */
 
 export const SPECIMEN_QUESTION =
-  "Why does learning-rate warmup stabilise Adam early in training?";
+  "What dropout rate did the authors use in their final model?";
 
 export type Fragment = {
   text: string;
-  /** grounded = cited to a retrieved chunk; unsupported = no chunk says this. */
   tone: "plain" | "grounded" | "unsupported" | "thin";
   cite?: string;
 };
 
-export type Provenance = {
-  section: string;
-  doc: string;
-  score: string;
-  miss?: boolean;
-};
+export type Provenance = { section: string; doc: string; score: string; miss?: boolean };
 
-export function buildSpecimen(on: (id: string) => boolean): {
+export function buildSpecimen(gateOn: boolean, citationsOn: boolean): {
   fragments: Fragment[];
   provenance: Provenance[];
   note: string;
   alert: boolean;
 } {
-  const cite = (id: string) => (on("generate") ? id : undefined);
-  const fragments: Fragment[] = [
-    {
-      text: "Warmup holds the effective step size small while Adam's second-moment estimate is still built from very few samples",
-      tone: "grounded",
-      cite: cite("c-14"),
-    },
-    { text: ", so the early updates are divided by a variance term that is mostly noise.", tone: "plain" },
-  ];
-
-  if (on("retrieve")) {
-    fragments.push({
-      text: " Your document calls this the update-direction variance problem and measures it over the first 400 steps",
-      tone: "grounded",
-      cite: cite("c-15"),
-    });
-    fragments.push({ text: ".", tone: "plain" });
-  } else {
-    fragments.push({
-      text: " The effect is usually described in general terms, since the exact passage naming it was not retrieved.",
-      tone: "thin",
-    });
+  // The corpus genuinely does not answer this question. It is one of the six
+  // unanswerable cases in the golden set.
+  if (gateOn) {
+    return {
+      fragments: [
+        {
+          text: "Your documents do not state a dropout rate. The closest passages cover weight decay and gradient clipping, neither of which answers the question",
+          tone: "thin",
+          cite: citationsOn ? "c-05" : undefined,
+        },
+        { text: ".", tone: "plain" },
+      ],
+      provenance: [
+        { section: "Weight decay and AdamW", doc: "optimizers.md", score: "0.21", miss: true },
+        { section: "Gradient clipping", doc: "optimizers.md", score: "0.18", miss: true },
+      ],
+      note:
+        "Gate on: nothing clears the relevance floor, so the pipeline refuses instead of generating. A refusal is a correct answer.",
+      alert: false,
+    };
   }
 
-  if (on("chunk")) {
-    fragments.push({
-      text: " It then shows the same run without warmup diverging at step 310, in the section on optimiser stability",
-      tone: "grounded",
-      cite: cite("c-21"),
-    });
-    fragments.push({ text: ".", tone: "plain" });
-  }
-
-  if (!on("rerank")) {
-    fragments.push({
-      text: " Warmup should be set to 4,000 steps by default, which is the figure the original Adam paper recommends.",
-      tone: "unsupported",
-      cite: "unsupported",
-    });
-  }
-
-  if (on("rerank") && on("generate")) {
-    fragments.push({
-      text: " Your documents do not give a recommended warmup length, so none is stated here.",
-      tone: "thin",
-    });
-  }
-
-  const provenance: Provenance[] = on("retrieve")
-    ? [
-        { section: "Optimiser stability → Warmup", doc: "lecture-07.pdf", score: "0.91" },
-        { section: "Adam → Second-moment estimate", doc: "lecture-07.pdf", score: "0.84" },
-        { section: "Experiments → Divergence at step 310", doc: "notes-week3.md", score: "0.77" },
-      ]
-    : [
-        { section: "Optimiser stability → Warmup", doc: "lecture-07.pdf", score: "0.88" },
-        { section: "Learning-rate schedules → Cosine decay", doc: "lecture-09.pdf", score: "0.52", miss: true },
-        { section: "Regularisation → Weight decay", doc: "lecture-04.pdf", score: "0.44", miss: true },
-      ];
-
-  let note =
-    "Every underlined claim resolves to a chunk id the retriever actually returned.";
-  let alert = false;
-
-  if (!on("rerank")) {
-    note =
-      "Gate off: nothing filtered the weak candidates, so an unsupported sentence entered the answer in the same confident register as the rest.";
-    alert = true;
-  } else if (!on("generate")) {
-    note =
-      "Citation check off: the claims may still be correct, but nothing ties them to a chunk, so a reader cannot tell retrieval from recall.";
-    alert = true;
-  } else if (!on("retrieve")) {
-    note =
-      "Hybrid off: the literal passage was ranked below two topically-adjacent sections, so the answer thins out into generalities.";
-    alert = true;
-  } else if (!on("chunk")) {
-    note =
-      "Breadcrumbs off: the experiment chunk lost its section context and no longer matched, so the supporting evidence is missing.";
-    alert = true;
-  }
-
-  return { fragments, provenance, note, alert };
+  return {
+    fragments: [
+      {
+        text: "The authors used a dropout rate of 0.1 across the residual connections and attention layers, which is the standard setting for a model of this depth",
+        tone: "unsupported",
+        cite: "no source",
+      },
+      {
+        text: " The notes also recommend pairing it with weight decay",
+        tone: "unsupported",
+        cite: "no source",
+      },
+      { text: ".", tone: "plain" },
+    ],
+    provenance: [
+      { section: "Weight decay and AdamW", doc: "optimizers.md", score: "18.0", miss: true },
+      { section: "Gradient clipping", doc: "optimizers.md", score: "6.0", miss: true },
+    ],
+    note:
+      "Gate off — today's behaviour. This question is one of the six the eval labels unanswerable; it scored 18.0 against a document that never mentions dropout, so context was handed over and the answer was written anyway.",
+    alert: true,
+  };
 }
