@@ -77,6 +77,8 @@
   margin: clamp(16px, 2.6vh, 26px) 0 0;
   font-weight: 900; font-stretch: 118%; letter-spacing: -0.055em; line-height: 0.84;
   font-size: clamp(46px, 13vw, 158px);
+  /* size to the name's own column so it never runs under the id plate */
+  font-size: clamp(34px, 14cqi, 158px);
   text-transform: uppercase;
 }
 .i-name span { color: var(--i-wire-2); }
@@ -253,6 +255,7 @@
 @media (max-width: 860px) {
   .i-mast-grid { grid-template-columns: 1fr; }
 }
+.i-mast-grid > div:first-child { container-type: inline-size; min-width: 0; }
 
 .i-id {
   width: clamp(168px, 20vw, 236px);
