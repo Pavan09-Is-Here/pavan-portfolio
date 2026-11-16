@@ -258,8 +258,8 @@ export default function InstrumentHome() {
                 <Image
                   src="/portrait.jpg"
                   alt="Pavan Alakunta"
-                  width={795}
-                  height={1000}
+                  width={1086}
+                  height={1366}
                   priority
                   sizes="(max-width: 860px) 42vw, 236px"
                 />
