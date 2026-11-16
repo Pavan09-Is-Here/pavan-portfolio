@@ -263,8 +263,6 @@ export default function InstrumentHome() {
                   priority
                   sizes="(max-width: 860px) 42vw, 236px"
                 />
-                <span className="wash" aria-hidden />
-                <span className="scan" aria-hidden />
               </div>
 
               <figcaption className="cap">
